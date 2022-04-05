@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+<form id="form" class="ajax-form" method="POST" action="." data-url="{{ request.build_absolute_uri|safe }}">
+    {% csrf_token %}
+
+</form>
+{% endblock %}
+
+{% block javascript %}
+<script>
+$(document).ready(function(){
+    var $myForm = $('.ajax-form')
+    $myForm.submit(function(event){
+        event.preventDefault()
+        var $formData = $(this).serialize()
+        var $thisURL = $myForm.attr('data-url') || window.location.href // or set your own url
+        $.ajax({
+            method: "POST",
+            url: $thisURL,
+            data: $formData,
+            success: handleFormSuccess,
+            error: handleFormError,
+        })
+    })
+
+    function handleFormSuccess(data, textStatus, jqXHR){
+        console.log(data)
+        console.log(textStatus)
+        console.log(jqXHR)
+        $myForm.reset(); // reset form data
+    }
+
+    function handleFormError(jqXHR, textStatus, errorThrown){
+        console.log(jqXHR)
+        console.log(textStatus)
+        console.log(errorThrown)
+    }
+})
+</script>
+{% endblock %}
