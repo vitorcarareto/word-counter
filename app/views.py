@@ -13,7 +13,6 @@ class WordCountView(AjaxFormMixin, FormView):
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
-        print('Form is valid!')
         response = super().form_valid(form)
         return response
 

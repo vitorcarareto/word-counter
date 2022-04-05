@@ -1,11 +1,34 @@
 {% extends 'base.html' %}
 
 {% block main %}
+<div class="container">
+    <h1 class="text-center">Word count challenge</h1>
+</div>
 
-<form id="form" class="ajax-form" method="POST" action="." data-url="{{ request.build_absolute_uri|safe }}">
-    {% csrf_token %}
+<div class="container">
+    <form id="form" class="ajax-form" method="POST" action="." data-url="{{ request.build_absolute_uri|safe }}">
+        {% csrf_token %}
+        {% include 'base_form.html' with form=form %}
 
-</form>
+        <div class="row pt-2">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="word-count-container" class="container mt-4" style="display:none">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-info" role="alert">
+                <p>
+                    Word count: <span id="word-count">0</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block javascript %}
@@ -26,10 +49,11 @@ $(document).ready(function(){
     })
 
     function handleFormSuccess(data, textStatus, jqXHR){
+        document.getElementById('word-count').innerHTML = data.count
+        document.getElementById('word-count-container').style.display = 'block'
         console.log(data)
         console.log(textStatus)
         console.log(jqXHR)
-        $myForm.reset(); // reset form data
     }
 
     function handleFormError(jqXHR, textStatus, errorThrown){
@@ -38,5 +62,7 @@ $(document).ready(function(){
         console.log(errorThrown)
     }
 })
+
+
 </script>
 {% endblock %}
